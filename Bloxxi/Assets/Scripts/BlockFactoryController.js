@@ -2,6 +2,10 @@
 
 
 
+/**
+	Private Sector
+**/
+
 /* Variables */
 private var EDrive : EventCenter = Bloxxi.EDrive;
 private var blockPrefab : GameObject;
@@ -12,14 +16,8 @@ private var rowsCreated : int = 0;
 
 
 /* Functions */
-private function init() {
-	blockPrefab = Resources.Load("Block", typeof(GameObject)) as GameObject;
-
-	EDrive.Trigger("BLOCK_FACTORY_INIT");
-}
 private function createBlock(row : int, column : int) {
-	var useCache : System.Boolean = blockCache.length != 0;
-	var blockObject : GameObject = useCache ? blockCache.Shift() : Instantiate(blockPrefab) as GameObject;
+	var blockObject : GameObject = (blockCache.length != 0) ? blockCache.Shift() : Instantiate(blockPrefab) as GameObject;
 	var block : Block = blockObject.GetComponent(Block) as Block;
 	block.row = row;
 	block.column = column;
@@ -35,7 +33,7 @@ private function createBlock(row : int, column : int) {
 
 	return blockObject;
 }
-private function createRowOfBlocks(row : int) {
+private function createRowOfBlocks(row : int, rowUp1 : Array, rowUp2 : Array) {
 	var rowOfBlocks : Array = [];
 	var blockLeft1Type : BLOCK_TYPE = 0;
 	var blockLeft2Type : BLOCK_TYPE = 0;
@@ -44,14 +42,16 @@ private function createRowOfBlocks(row : int) {
 		var newBlock : Block = newBlockObject.GetComponent(Block) as Block;
 
 		while (blockLeft2Type && blockLeft1Type && blockLeft2Type == newBlock.type && blockLeft1Type == newBlock.type) {
-			EDrive.Trigger("SET_BLOCK_TYPE", BLOCK_TYPE.GetValues(BLOCK_TYPE)[Mathf.Round(Random.value * (Bloxxi.BLOCK_TYPE_COUNT - 1))]);
+			newBlock.setNewType();
 		}
 
 		if (blockLeft2Type == 0) {
 			blockLeft2Type = newBlock.type;
-		} else if (blockLeft1Type == 0) {
+		}
+		else if (blockLeft1Type == 0) {
 			blockLeft1Type = newBlock.type;
-		} else {
+		}
+		else {
 			blockLeft2Type = blockLeft1Type;
 			blockLeft1Type = newBlock.type;
 		}
@@ -63,8 +63,27 @@ private function createRowOfBlocks(row : int) {
 
 	EDrive.Trigger("CREATED_ROW_OF_BLOCKS", rowOfBlocks);
 }
+private function createRowOfBlocks(row : int) {
+	createRowOfBlocks(row, [], []);
+}
 
 
+
+
+/**
+	Public Sector
+**/
+
+/* Methods */
+public function createInitialBlocks() {
+	return [];
+}
+
+
+
+/**
+	Base Sector
+**/
 
 /* Listeners */
 EDrive
@@ -73,7 +92,16 @@ EDrive
 
 
 
-/* Base Methods */
+/* Init */
+function init() {
+	blockPrefab = Resources.Load("Block", typeof(GameObject)) as GameObject;
+
+	EDrive.Trigger("BLOCK_FACTORY_INIT");
+}
+
+
+
+/* Delegate */
 function Awake() {
 	init();
 }

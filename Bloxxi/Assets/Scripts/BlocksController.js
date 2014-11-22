@@ -43,10 +43,9 @@ private var gameOver : System.Boolean = false;
 
 /* Functions */
 private function updateBlockType(blockObject : GameObject, blockType : BLOCK_TYPE) {
-	if (!blockObject) {
-		return;
+	if (blockObject) {
+		updateBlockType(blockObject.GetComponent(Block), blockType);
 	}
-	updateBlockType(blockObject.GetComponent(Block), blockType);
 }
 private function updateBlockType(block : Block, blockType : BLOCK_TYPE) {
 	block.type = blockType;
@@ -79,7 +78,7 @@ private function createInitialBlocks() {
 		var blockLeft1 : Block = BlockAt(row, column - 1) as Block;
 		var blockLeft2 : Block = BlockAt(row, column - 2) as Block;
 
-		while(
+		while (
 			(blockLeft1 != null && blockLeft2 != null && blockLeft1.type == block.type && blockLeft2.type == block.type) ||
 			(blockDown1 != null && blockDown2 != null && blockDown1.type == block.type && blockDown2.type == block.type)
 		) {
@@ -376,11 +375,7 @@ public function At(row : int, column : int) {
 		return null;
 	}
 	var tryIndex : int = (row * Bloxxi.COLUMN_COUNT) + column;
-	if (tryIndex < 0 || blockObjects.length <= tryIndex) {
-		return null;
-	} else {
-		return blockObjects[tryIndex];
-	}
+	return (tryIndex < 0 || blockObjects.length <= tryIndex) ? null : blockObjects[tryIndex];
 }
 public function BlockAt(row : int, column : int) {
 	var blockObject : GameObject = At(row, column) as GameObject;
@@ -524,7 +519,8 @@ function Update() {
 
 	if (!Input.GetButton("Fire1")) {
 		heldBlockObject = null;
-	} else {
+	}
+	else {
 		touchHandler();
 	}
 

@@ -2,21 +2,28 @@
 
 
 
+/**
+	Private Sector
+**/
+
 /* Variables */
 private var spriteRenderer : SpriteRenderer;
 
 
 
 /* Functions */
-private function setType() {
-	var typeIndex : int = Mathf.Round(Random.value * (Bloxxi.BLOCK_TYPE_COUNT - 1));
-	type = BLOCK_TYPE.GetValues(BLOCK_TYPE)[typeIndex];
-	spriteRenderer.sprite = BlocksController.blockSprites[typeIndex] as Sprite;
+private function setType(newType : BLOCK_TYPE) {
+	type = newType;
+	spriteRenderer.sprite = BlocksController.blockSprites[newType] as Sprite;
 }
 
 
 
-/* Interface */
+/**
+	Public Sector
+**/
+
+/* Properties */
 public enum BLOCK_TYPE {
 	HEART,
 	DIAMOND,
@@ -36,7 +43,18 @@ public var type : BLOCK_TYPE;
 public var row : int;
 public var column : int;
 public var state : BLOCK_STATE = BLOCK_STATE.STABLE;
-public function setNewType() { setType(); }
+
+
+
+/* Methods */
+public function setNewType(newType : BLOCK_TYPE) { //Set to specific type
+	setType(newType);
+}
+public function setNewType() { //Sets to random type
+	var typeIndex : int = Mathf.Round(Random.value * (Bloxxi.BLOCK_TYPE_COUNT - 1));
+	setType(BLOCK_TYPE.GetValues(BLOCK_TYPE)[typeIndex]);
+}
+
 public function setRiseState() {
 	state = BLOCK_STATE.RISE;
 	spriteRenderer.color.r = spriteRenderer.color.g = spriteRenderer.color.b = 0.5;
@@ -49,12 +67,19 @@ public function setClearState() {
 	state = BLOCK_STATE.CLEAR;
 	spriteRenderer.color.a = 0.5;
 }
-public function destroyBlock() { DestroyObject(gameObject); }
+
+public function destroyBlock() {
+	DestroyObject(gameObject);
+}
 
 
 
-/* Base Methods */
+/**
+	Base Sector
+**/
+
+/* Delegate */
 function Awake() {
 	spriteRenderer = gameObject.GetComponent(SpriteRenderer);
-	setType();
+	setNewType();
 }

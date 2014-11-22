@@ -14,4 +14,4 @@ static var BLOCK_HEIGHT : float = 1;
 static var BLOCK_SPRITE_PIXELS_TO_UNITS : float = 16;
 static var BLOCK_SWAP_SPEED : float = 5;
 
-static var EDrive : EventCenter = EventCenter();
+static var EDrive : EventCenter = EventCenter(); //transform.parent.GetComponent(EventCenter) as EventCenter;
