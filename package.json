@@ -1,0 +1,32 @@
+{
+  "//1": "describes your app and its dependencies",
+  "//2": "https://docs.npmjs.com/files/package.json",
+  "//3": "updating this file will download and update your packages",
+  "name": "my-glitch-app",
+  "version": "0.0.0",
+  "description": "What am I about?",
+  "main": "server.js",
+  "scripts": {
+    "prepare": "rollup -c",
+    "start": "npm run prepare && node server.js"
+  },
+  "dependencies": {
+    "express": "^4.16.2",
+    "rollup": "^0.55.5",
+    "lodash": "^4.17.5",
+    "rollup-plugin-node-resolve": "^3.0.3",
+    "rollup-plugin-commonjs": "^8.3.0"
+  },
+  "engines": {
+    "node": "8.x"
+  },
+  "repository": {
+    "url": "https://glitch.com/edit/#!/welcome-project"
+  },
+  "license": "MIT",
+  "keywords": [
+    "node",
+    "glitch",
+    "express"
+  ]
+}
